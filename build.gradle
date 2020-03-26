@@ -13,10 +13,18 @@ repositories {
 }
 
 dependencies {
+	testCompile('junit:junit:4.12')
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+
+	compile('org.springframework.data:spring-data-jpa:2.2.5.RELEASE')
+	compile('javax.persistence:javax.persistence-api:2.2')
+	compile('org.projectlombok:lombok:1.18.12')
+
+	annotationProcessor('org.projectlombok:lombok:1.18.8')
+	implementation 'junit:junit:4.12'
 }
 
 test {
