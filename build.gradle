@@ -13,15 +13,18 @@ repositories {
 }
 
 dependencies {
+	compile 'org.flywaydb:flyway-core'
+
 	testCompile('junit:junit:4.12')
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'mysql:mysql-connector-java'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 
-	compile('javax.persistence:javax.persistence-api:2.2')
-	compile('org.projectlombok:lombok:1.18.12')
+	implementation('javax.persistence:javax.persistence-api:2.2')
+	implementation('org.projectlombok:lombok:1.18.12')
 
 	annotationProcessor('org.projectlombok:lombok:1.18.8')
 }
