@@ -65,7 +65,7 @@ public class VolunteerRequestControllerTest {
     @Test
     public void shouldCreateNewVolunteerRequest() throws Exception {
         when(volunteerRequestService.createVolunteerRequest(any(VolunteerRequest.class))).thenReturn(42l);
-        mockMvc.perform(post("/volunteerRequests")
+        mockMvc.perform(post("/volunteer-requests")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(volunteerRequest))
                 .accept(MediaType.APPLICATION_JSON))
@@ -88,7 +88,7 @@ public class VolunteerRequestControllerTest {
     @Test
     public void shouldReturnAllVolunteerRequests() throws Exception {
         when(volunteerRequestService.getVolunteerRequests()).thenReturn(Arrays.asList(volunteerRequest, otherVolunteerRequest));
-        mockMvc.perform(get("/volunteerRequests")
+        mockMvc.perform(get("/volunteer-requests")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].name").value(volunteerRequest.getName()))

@@ -21,13 +21,13 @@ public class VolunteerRequestController {
     @Autowired
     private final VolunteerRequestService volunteerRequestService;
 
-    @PostMapping("/volunteerRequests")
+    @PostMapping("/volunteer-requests")
     public ResponseEntity<Long> createVolunteerRequest(@RequestBody VolunteerRequest volunteerRequest) {
         Long id = volunteerRequestService.createVolunteerRequest(volunteerRequest);
         return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
-    @GetMapping("/volunteerRequests")
+    @GetMapping("/volunteer-requests")
     public ResponseEntity<List<VolunteerRequest>> getVolunteerRequests() {
         List<VolunteerRequest> volunteerRequests = volunteerRequestService.getVolunteerRequests();
         return new ResponseEntity<>(volunteerRequests, HttpStatus.OK);
