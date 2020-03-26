@@ -21,7 +21,7 @@ public class VolunteerRequestController {
     @Autowired
     private final VolunteerRequestService volunteerRequestService;
 
-    @PostMapping("/volunteerRequest")
+    @PostMapping("/volunteerRequests")
     public ResponseEntity<Long> createVolunteerRequest(@RequestBody VolunteerRequest volunteerRequest) {
         Long id = volunteerRequestService.createVolunteerRequest(volunteerRequest);
         return new ResponseEntity<>(id, HttpStatus.CREATED);

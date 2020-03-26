@@ -65,7 +65,7 @@ public class VolunteerRequestControllerTest {
     @Test
     public void shouldCreateNewVolunteerRequest() throws Exception {
         when(volunteerRequestService.createVolunteerRequest(any(VolunteerRequest.class))).thenReturn(42l);
-        mockMvc.perform(post("/volunteerRequest")
+        mockMvc.perform(post("/volunteerRequests")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(volunteerRequest))
                 .accept(MediaType.APPLICATION_JSON))
