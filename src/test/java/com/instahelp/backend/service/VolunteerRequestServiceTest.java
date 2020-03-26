@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -66,5 +68,15 @@ public class VolunteerRequestServiceTest {
         long id = volunteerRequestService.createVolunteerRequest(volunteerRequest);
         verify(volunteerRequestRepository, times(1)).save(volunteerRequest);
         assertThat(id, is(savedVolunteerRequest.getId()));
+    }
+
+    @Test
+    public void shouldReturnVolunteerRequests() {
+        when(volunteerRequestRepository.findAll()).thenReturn(Arrays.asList(volunteerRequest, savedVolunteerRequest));
+        List<VolunteerRequest> volunteerRequests = volunteerRequestService.getVolunteerRequests();
+        verify(volunteerRequestRepository, times(1)).findAll();
+        assertThat(volunteerRequests.size(), is(2));
+        assertThat(volunteerRequests.get(0).getName(), is(volunteerRequest.getName()));
+        assertThat(volunteerRequests.get(1).getName(), is(savedVolunteerRequest.getName()));
     }
 }

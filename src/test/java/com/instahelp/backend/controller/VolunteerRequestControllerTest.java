@@ -13,14 +13,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -35,6 +37,7 @@ public class VolunteerRequestControllerTest {
     private ArgumentCaptor<VolunteerRequest> volunteerRequestArgumentCaptor = ArgumentCaptor.forClass(VolunteerRequest.class);
 
     private VolunteerRequest volunteerRequest;
+    private VolunteerRequest otherVolunteerRequest;
 
     @BeforeEach
     public void setUp() {
@@ -45,6 +48,16 @@ public class VolunteerRequestControllerTest {
                 .zip("10101")
                 .email("testy@testerson.com")
                 .phoneNumber("1112223333")
+                .date(new Date())
+                .build();
+
+        otherVolunteerRequest = VolunteerRequest.builder()
+                .name("Hungry Harry")
+                .title("Need food")
+                .details("Haven't eaten in weeks")
+                .zip("10101")
+                .email("hungry@harry.com")
+                .phoneNumber("4445556666")
                 .date(new Date())
                 .build();
     }
@@ -70,6 +83,18 @@ public class VolunteerRequestControllerTest {
         assertThat(actual.getEmail(), is(volunteerRequest.getEmail()));
         assertThat(actual.getPhoneNumber(), is(volunteerRequest.getPhoneNumber()));
         assertThat(actual.getDate(), is(volunteerRequest.getDate()));
+    }
+
+    @Test
+    public void shouldReturnAllVolunteerRequests() throws Exception {
+        when(volunteerRequestService.getVolunteerRequests()).thenReturn(Arrays.asList(volunteerRequest, otherVolunteerRequest));
+        mockMvc.perform(get("/volunteerRequests")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].name").value(volunteerRequest.getName()))
+                .andExpect(jsonPath("$.[1].name").value(otherVolunteerRequest.getName()));
+
+        verify(volunteerRequestService, times(1)).getVolunteerRequests();
     }
 
 }

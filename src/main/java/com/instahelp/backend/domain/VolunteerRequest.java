@@ -21,7 +21,6 @@ import java.util.Date;
 public class VolunteerRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
     Long id;
     String name;
     String title;
