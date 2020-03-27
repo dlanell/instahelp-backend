@@ -42,6 +42,6 @@ public class VolunteerRequestController {
 
     @ExceptionHandler({NoSuchElementException.class})
     public ResponseEntity<String> handleVolunteerRequestNotFound() {
-        return new ResponseEntity<>("Could not find a volunteer request with the given Id", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Could not find a volunteer request with the given Id", HttpStatus.NOT_FOUND);
     }
 }

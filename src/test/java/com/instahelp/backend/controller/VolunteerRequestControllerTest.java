@@ -138,7 +138,7 @@ public class VolunteerRequestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(volunteerDTO))
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
 }
