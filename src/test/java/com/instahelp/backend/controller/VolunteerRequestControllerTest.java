@@ -1,6 +1,7 @@
 package com.instahelp.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.instahelp.backend.domain.Volunteer;
 import com.instahelp.backend.domain.VolunteerRequest;
 import com.instahelp.backend.service.VolunteerRequestService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.NoSuchElementException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -35,9 +37,13 @@ public class VolunteerRequestControllerTest {
     private VolunteerRequestService volunteerRequestService;
 
     private ArgumentCaptor<VolunteerRequest> volunteerRequestArgumentCaptor = ArgumentCaptor.forClass(VolunteerRequest.class);
+    private ArgumentCaptor<Volunteer> volunteerArgumentCaptor = ArgumentCaptor.forClass(Volunteer.class);
+    private ArgumentCaptor<Long> volunteerRequestIdArgumentCaptor = ArgumentCaptor.forClass(Long.class);
 
     private VolunteerRequest volunteerRequest;
     private VolunteerRequest otherVolunteerRequest;
+
+    private VolunteerDTO volunteerDTO;
 
     @BeforeEach
     public void setUp() {
@@ -59,6 +65,11 @@ public class VolunteerRequestControllerTest {
                 .email("hungry@harry.com")
                 .phoneNumber("4445556666")
                 .date(new Date())
+                .build();
+
+        volunteerDTO = VolunteerDTO.builder()
+                .name("Vinny Volunteer")
+                .phoneNumber("1112223333")
                 .build();
     }
 
@@ -95,6 +106,39 @@ public class VolunteerRequestControllerTest {
                 .andExpect(jsonPath("$.[1].name").value(otherVolunteerRequest.getName()));
 
         verify(volunteerRequestService, times(1)).getVolunteerRequests();
+    }
+
+    @Test
+    public void shouldAssignVolunteerToVolunteerRequest() throws Exception {
+        when(volunteerRequestService.assignVolunteerToVolunteerRequest(any(Volunteer.class), anyLong())).thenReturn(42l);
+        mockMvc.perform(post("/volunteer-requests/21/volunteer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(volunteerDTO))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("42"));
+
+        verify(volunteerRequestService, times(1))
+                .assignVolunteerToVolunteerRequest(
+                        volunteerArgumentCaptor.capture(),
+                        volunteerRequestIdArgumentCaptor.capture());
+
+        Long actualId = volunteerRequestIdArgumentCaptor.getValue();
+        assertThat(actualId, is(21l));
+
+        Volunteer actualVolunteer = volunteerArgumentCaptor.getValue();
+        assertThat(actualVolunteer.getName(), is(volunteerDTO.getName()));
+        assertThat(actualVolunteer.getPhoneNumber(), is(volunteerDTO.getPhoneNumber()));
+    }
+
+    @Test
+    public void shouldReturnBadReqeustWhenVolunteerRequestIdCannotBeFound() throws Exception {
+        when(volunteerRequestService.assignVolunteerToVolunteerRequest(any(Volunteer.class), anyLong())).thenThrow(new NoSuchElementException());
+        mockMvc.perform(post("/volunteer-requests/21/volunteer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(volunteerDTO))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
 }

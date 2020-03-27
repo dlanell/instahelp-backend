@@ -14,6 +14,8 @@ repositories {
 
 dependencies {
 	compile 'org.flywaydb:flyway-core'
+	compile('io.springfox:springfox-swagger2:2.9.2')
+	compile('io.springfox:springfox-swagger-ui:2.9.2')
 
 	testCompile('junit:junit:4.12')
 	implementation 'org.springframework.boot:spring-boot-starter-web'
