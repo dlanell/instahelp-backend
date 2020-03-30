@@ -6,9 +6,11 @@ import com.instahelp.backend.domain.Volunteer;
 import com.instahelp.backend.domain.VolunteerRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,8 +25,13 @@ public class VolunteerRequestService {
     @Autowired
     private final VolunteerRepository volunteerRepository;
 
-    public long createVolunteerRequest(VolunteerRequest volunteerRequest) {
-        return volunteerRequestRepository.save(volunteerRequest).getId();
+    public long createVolunteerRequest(VolunteerRequest volunteerRequest) throws DuplicateKeyException {
+        try {
+            return volunteerRequestRepository.save(volunteerRequest).getId();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        throw new DuplicateKeyException("Duplicate volunteer request submitted");
     }
 
     public List<VolunteerRequest> getVolunteerRequests() {

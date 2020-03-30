@@ -10,6 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.util.*;
 
@@ -84,6 +85,14 @@ public class VolunteerRequestServiceTest {
         long id = volunteerRequestService.createVolunteerRequest(volunteerRequest);
         verify(volunteerRequestRepository, times(1)).save(volunteerRequest);
         assertThat(id, is(savedVolunteerRequest.getId()));
+    }
+
+    @Test
+    public void shouldNotTryToSaveIfVolunteerRequestAlreadyExists() {
+        when(volunteerRequestRepository.save(any(VolunteerRequest.class))).thenThrow(new DuplicateKeyException("uh oh"));
+        assertThrows(DuplicateKeyException.class, () -> {
+            volunteerRequestService.createVolunteerRequest(volunteerRequest);
+        });
     }
 
     @Test
