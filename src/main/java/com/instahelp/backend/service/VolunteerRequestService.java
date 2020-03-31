@@ -25,9 +25,14 @@ public class VolunteerRequestService {
     @Autowired
     private final VolunteerRepository volunteerRepository;
 
+    @Autowired
+    private final MessagingService messagingService;
+
     public long createVolunteerRequest(VolunteerRequest volunteerRequest) throws DuplicateKeyException {
         try {
-            return volunteerRequestRepository.save(volunteerRequest).getId();
+            VolunteerRequest savedRequest = volunteerRequestRepository.save(volunteerRequest);
+            messagingService.sendCreationSmsFor(savedRequest);
+            return savedRequest.getId();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

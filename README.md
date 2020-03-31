@@ -6,6 +6,15 @@ Backend API for the InstaHelp mobile app.
 ### Prerequisites
 This project was written using spring boot and is compatible with Java 1.8.
 You will also need MySQL running with the user created that is specified in the ```bootStrap/db_init.sql``` file.
+
+In order to run the application locally, you will need the following environment variables set:
+* ```TWILIO_ACCOUNT_SID```
+* ```TWILIO_ACCOUNT_AUTH_TOKEN```
+* ```TWILIO_ACCOUNT_PHONE_NUMBER```
+
+The values for these variables can be obtained by setting up a developer account on the [Twilio website](https://www.twilio.com/try-twilio).
+
+You should then run the application with the ```spring.profiles.active``` property set to ```local```.
 ## Running the application
 ### Running the tests
 The unit tests can be executed with the following command:

@@ -28,6 +28,9 @@ public class VolunteerRequestServiceTest {
     @Mock
     private VolunteerRepository volunteerRepository;
 
+    @Mock
+    private MessagingService messagingService;
+
     @InjectMocks
     private VolunteerRequestService volunteerRequestService;
 
@@ -76,7 +79,11 @@ public class VolunteerRequestServiceTest {
                 .build();
 
         MockitoAnnotations.initMocks(this);
-        volunteerRequestService = new VolunteerRequestService(volunteerRequestRepository, volunteerRepository);
+        volunteerRequestService = new VolunteerRequestService(
+                volunteerRequestRepository,
+                volunteerRepository,
+                messagingService
+        );
     }
 
     @Test
@@ -85,6 +92,8 @@ public class VolunteerRequestServiceTest {
         long id = volunteerRequestService.createVolunteerRequest(volunteerRequest);
         verify(volunteerRequestRepository, times(1)).save(volunteerRequest);
         assertThat(id, is(savedVolunteerRequest.getId()));
+        verify(messagingService, times(1)).sendCreationSmsFor(volunteerRequestCaptor.capture());
+        assertThat(volunteerRequestCaptor.getValue().getId(), is(savedVolunteerRequest.getId()));
     }
 
     @Test
