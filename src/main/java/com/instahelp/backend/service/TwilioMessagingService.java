@@ -6,9 +6,13 @@ import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+
 @Service
+@Profile("twilio")
 @RequiredArgsConstructor
 public class TwilioMessagingService implements MessagingService {
 
@@ -23,14 +27,31 @@ public class TwilioMessagingService implements MessagingService {
 
     @Override
     public void sendCreationSmsFor(VolunteerRequest volunteerRequest) {
-         Twilio.init(accountSid, authToken);
+         sendMessage(
+                 String.format(volunteerRequest.getPhoneNumber()),
+                 String.format("Your request for \"%s\" has been submitted. You will be notified as soon as a volunteer is found to help with your request.", volunteerRequest.getTitle())
+         );
+    }
 
-         Message.creator(
-                 new PhoneNumber(String.format("+1%s", volunteerRequest.getPhoneNumber())),
-                 new PhoneNumber(phoneNumber),
-                 String.format("Your request for \"%s\" has been submitted. You'll be notified as soon as a volunteer is found to help with your request.", volunteerRequest.getTitle())
-         ).create();
+    @Override
+    public void sendVolunteerAssignedToMessage(VolunteerRequest volunteerRequest) {
+        sendMessage(
+                String.format(volunteerRequest.getPhoneNumber()),
+                String.format("Great news, %s has volunteered to help with your request. You can reach them at: %s", volunteerRequest.getVolunteer().getName(), volunteerRequest.getVolunteer().getPhoneNumber())
+        );
 
+        sendMessage(
+                String.format(volunteerRequest.getVolunteer().getPhoneNumber()),
+                String.format("We have notified %s that you are interested in fulfilling their request. You can reach them at: %s to get the ball rolling and thanks for helping out!.", volunteerRequest.getName(), volunteerRequest.getPhoneNumber())
+        );
+    }
 
+    private void sendMessage(String recipientPhoneNumber, String message) {
+        Twilio.init(accountSid, authToken);
+        Message.creator(
+                new PhoneNumber(String.format("+1%s", recipientPhoneNumber)),
+                new PhoneNumber(phoneNumber),
+                message
+        ).create();
     }
 }

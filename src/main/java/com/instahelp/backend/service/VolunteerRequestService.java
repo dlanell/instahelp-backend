@@ -10,8 +10,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +49,7 @@ public class VolunteerRequestService {
         volunteerRequest.setVolunteer(getExistingOrCreateVolunteer(volunteer));
         volunteerRequestRepository.save(volunteerRequest);
 
+        messagingService.sendVolunteerAssignedToMessage(volunteerRequest);
         return volunteerRequest.getId();
     }
 

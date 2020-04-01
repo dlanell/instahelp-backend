@@ -132,6 +132,9 @@ public class VolunteerRequestServiceTest {
         VolunteerRequest actualRequest = volunteerRequestCaptor.getValue();
         assertThat(actualRequest.getVolunteer(), is(notNullValue()));
         assertThat(actualRequest.getVolunteer(), is(volunteer));
+
+        verify(messagingService, times(1)).sendVolunteerAssignedToMessage(volunteerRequestCaptor.capture());
+        assertThat(volunteerRequestCaptor.getValue().getId(), is(savedVolunteerRequest.getId()));
     }
 
     @Test
