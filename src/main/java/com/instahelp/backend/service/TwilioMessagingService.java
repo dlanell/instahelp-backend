@@ -25,6 +25,11 @@ public class TwilioMessagingService implements MessagingService {
     @Value("${twilio.account.phone.number}")
     private String phoneNumber;
 
+    @PostConstruct
+    public void init() {
+        Twilio.init(accountSid, authToken);
+    }
+
     @Override
     public void sendCreationSmsFor(VolunteerRequest volunteerRequest) {
          sendMessage(
@@ -47,7 +52,6 @@ public class TwilioMessagingService implements MessagingService {
     }
 
     private void sendMessage(String recipientPhoneNumber, String message) {
-        Twilio.init(accountSid, authToken);
         Message.creator(
                 new PhoneNumber(String.format("+1%s", recipientPhoneNumber)),
                 new PhoneNumber(phoneNumber),
