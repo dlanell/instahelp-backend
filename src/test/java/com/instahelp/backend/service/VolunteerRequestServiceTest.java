@@ -106,9 +106,9 @@ public class VolunteerRequestServiceTest {
 
     @Test
     public void shouldReturnVolunteerRequests() {
-        when(volunteerRequestRepository.findAllByVolunteerIsNull()).thenReturn(Arrays.asList(volunteerRequest, savedVolunteerRequest));
+        when(volunteerRequestRepository.findAvailableVolunteerRequests()).thenReturn(Arrays.asList(volunteerRequest, savedVolunteerRequest));
         List<VolunteerRequest> volunteerRequests = volunteerRequestService.getVolunteerRequests();
-        verify(volunteerRequestRepository, times(1)).findAllByVolunteerIsNull();
+        verify(volunteerRequestRepository, times(1)).findAvailableVolunteerRequests();
         assertThat(volunteerRequests.size(), is(2));
         assertThat(volunteerRequests.get(0).getName(), is(volunteerRequest.getName()));
         assertThat(volunteerRequests.get(1).getName(), is(savedVolunteerRequest.getName()));

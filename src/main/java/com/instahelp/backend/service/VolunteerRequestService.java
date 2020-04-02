@@ -38,7 +38,7 @@ public class VolunteerRequestService {
     }
 
     public List<VolunteerRequest> getVolunteerRequests() {
-        return volunteerRequestRepository.findAllByVolunteerIsNull();
+        return volunteerRequestRepository.findAvailableVolunteerRequests();
     }
 
     @Transactional
