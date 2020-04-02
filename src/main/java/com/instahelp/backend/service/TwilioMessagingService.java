@@ -52,10 +52,15 @@ public class TwilioMessagingService implements MessagingService {
     }
 
     private void sendMessage(String recipientPhoneNumber, String message) {
-        Message.creator(
-                new PhoneNumber(String.format("+1%s", recipientPhoneNumber)),
-                new PhoneNumber(phoneNumber),
-                message
-        ).create();
+        try {
+            Message.creator(
+                    new PhoneNumber(String.format("+1%s", recipientPhoneNumber)),
+                    new PhoneNumber(phoneNumber),
+                    message
+            ).create();
+        } catch (Exception e) {
+            System.err.println(String.format("Failed to send message \"%s\" to \"%s\".", message, recipientPhoneNumber));
+            e.printStackTrace();
+        }
     }
 }

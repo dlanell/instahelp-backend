@@ -26,6 +26,7 @@ public class VolunteerRequest {
     private String zip;
     private String phoneNumber;
     private String email;
+    private String preferredPaymentMethod;
 
     @ManyToOne
     @JoinColumn(name="volunteer_id")
