@@ -1,0 +1,11 @@
+---
+applications:
+  - name: instahelp-api
+    memory: 1G
+    instances: 2
+    services:
+      - instahelp_db
+    env:
+      DB_URL: ${vcap.services.instahelp_db.credentials.jdbcUrl}
+      DB_USERNAME: ${vcap.services.instahelp_db.credentials.username}
+      DB_PASSWORD: ${vcap.services.instahelp_db.credentials.password}
