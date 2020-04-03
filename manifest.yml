@@ -6,6 +6,7 @@ applications:
     services:
       - instahelp_db
     env:
-      DB_URL: ${vcap.services.instahelp_db.credentials.jdbcUrl}
-      DB_USERNAME: ${vcap.services.instahelp_db.credentials.username}
-      DB_PASSWORD: ${vcap.services.instahelp_db.credentials.password}
+      SPRING_PROFILES_ACTIVE: twilio
+      TWILIO_ACCOUNT_SID: AC103ce69068d331d7fc784af675a96b6a
+      TWILIO_ACCOUNT_AUTH_TOKEN: 7221357c4e31b4f114de77d124a1d517
+      TWILIO_ACCOUNT_PHONE_NUMBER: +18176312039
